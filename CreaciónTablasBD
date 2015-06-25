@@ -1,0 +1,52 @@
+USE controlGD;
+
+CREATE TABLE usuarios(
+  rut_usuario VARCHAR(13) NOT NULL,
+  nombre_usuario VARCHAR(20) NOT NULL,
+  clave_usuario VARCHAR(15) NOT NULL,
+  CONSTRAINT pk_usuarios PRIMARY KEY(rut_usuario)
+  );
+
+CREATE TABLE sueldos(
+  cod_sueldo INT IDENTITY,
+  fecha_sueldo DATE NOT NULL,
+  valor_sueldo INT NOT NULL,
+  usuario VARCHAR(13) NOT NULL
+  CONSTRAINT pk_sueldo PRIMARY KEY(cod_sueldo),
+  CONSTRAINT fk_sueldo FOREIGN KEY(usuario) REFERENCES usuarios(rut_usuario)
+  );
+
+CREATE TABLE ahorros(
+  cod_ahorro INT IDENTITY,
+  desc_ahorro VARCHAR(25) NOT NULL,
+  fecha_ahorro DATE NOT NULL,
+  valor_ahorro INT NOT NULL,
+  CONSTRAINT pk_ahorro PRIMARY KEY(cod_ahorro)
+  );  
+  
+  CREATE TABLE tipoGastos(
+    cod_tgasto INT IDENTITY,
+    desc_tgasto VARCHAR(25) NOT NULL,
+    CONSTRAINT pk_tipoGastos PRIMARY KEY(cod_tgasto)
+    );
+
+CREATE TABLE gastos(
+  cod_gasto INT IDENTITY,
+  valor_gasto INT NOT NULL,
+  fecha_gasto DATE NOT NULL,
+  tipoGasto INT NOT NULL,
+  ahorro INT NOT NULL,
+  CONSTRAINT pk_gastos PRIMARY KEY(cod_gasto),
+  CONSTRAINT fk_gastos1 FOREIGN KEY(tipoGasto) REFERENCES tipoGastos(cod_tgasto),
+  CONSTRAINT fk_gastos2 FOREIGN KEY(ahorro) REFERENCES ahorros(cod_ahorro)
+  );
+  
+ CREATE TABLE saldoDetalle(
+   sueldo INT NOT NULL,
+   gasto INT NOT NULL,
+   valor_saldo INT NOT NULL,
+   fecha_saldo DATE NOT NULL,
+   CONSTRAINT pk_saldo PRIMARY KEY(sueldo, gasto),
+   CONSTRAINT fk_saldo1 FOREIGN KEY(sueldo) REFERENCES sueldos(cod_sueldo),
+   CONSTRAINT fk_saldo2 FOREIGN KEY(gasto) REFERENCES gastos(cod_gasto)
+   );
